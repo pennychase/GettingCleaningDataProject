@@ -1,4 +1,18 @@
-setwd("~/Documents/MOOCs/Data Science Specialization/Course3_Cleaning-Data/Project")
+#####
+##### run_Analysis.R
+#####
+##### Creates a tidy data set from the "Human Activities Recognition Using Smartphones Dataset v.1"
+#####
+##### Defines utility functions: makeFilename(), cleanNames(), and prepareData()
+#####
+##### The body of the script does the following: 
+#####   1. Calls prepareData() on the train and test datasets to create tidy data frames
+#####   2. Merges the train and test data frames
+#####   3. Subsets the mean and standard deviation variables from the merged data frame
+#####   4. Computes the means and standard deviations of all the variables in the subset
+#####      by subject and activity
+#####   5. Writes the data frame in a form that can be read in with read.table()
+#####
 
 # baseDirectory is the directory where the UCI HAR data is located
 baseDirectory <- "./UCI HAR Dataset"
@@ -17,7 +31,47 @@ makeFilename <- function (dataSet, ftype) {
   fullpath <- paste(baseDirectory, dataSet, fname, sep="/")
 }
 
-cleanData <- function (dataSet) {
+##
+## cleanNames cleans up the variable names by removing special characters, spelling out some
+## abbreviations, and separating portions of long variable names. We don't handle all situations
+## because most of the variables won't be used in our final tidy data set.
+## 
+cleanNames <- function(varnames) {
+  
+  # splitandjoin is a healp function to use in an sapply()
+  # It splits a variable name into the parts separated by "-",
+  # removes the parentheses in the second part (which is the summary function call),
+  # and rejoins the parts separated by "."
+  splitandjoin <- function(varname) {
+    strs <- strsplit(varname, "-")   # Creates a list of one element, a vector of strings
+    strs[[1]][2] <- sub("\\(\\)", "", strs[[1]][2])
+    paste(unlist(strs), collapse=".")
+  }
+  
+  cleaned <- varnames
+  
+  # inital t --> time
+  cleaned <- sapply(cleaned, function(x) { sub("^t", "time.", x) })
+  
+  # inital f --> freq
+  cleaned <- sapply(cleaned, function(x) { sub("^f", "freq.", x) })
+  
+  # Acc --> Accel (makes it more obvious that the variable is accelerometer data)
+  cleaned <- sapply(cleaned, function(x) { sub("Acc", "Accel", x) })
+  
+  # BodyBody --> Body (most likely a coding error)
+  cleaned <- sapply(cleaned, function(x) { sub("BodyBody", "Body", x) })
+  
+  # delete the () in the function call parts of the variable names
+  cleaned <- sapply(cleaned, splitandjoin)
+}
+
+
+##
+## prepareData prepares a dataset by joining the subject and activity variables with the measures. It also
+## ensures that all the variables have descriptive and cleaned-up names
+## Arguments: dataSet is "test" or "train"
+prepareData <- function (dataSet) {
 
   ##
   ## Read in the components of the data set (spread across three files)
@@ -28,6 +82,12 @@ cleanData <- function (dataSet) {
   activity <- as.integer(readLines(makeFilename(dataSet, "activity"))) 
   # Read in the measures
   measures <- read.table(makeFilename(dataSet, "measures"))
+  
+  ##
+  ## Provide descriptive variable names for the measures
+  ##
+  features <- read.table(paste(baseDirectory, "features.txt", sep="/"), stringsAsFactors=FALSE, col.names=c("id", "label"))
+  colnames(measures) <- cleanNames(features$label)
   
   ##
   ## Provide descriptive activity names from activity_labels.txt
@@ -44,3 +104,42 @@ cleanData <- function (dataSet) {
   # Create the full data frame
   fullData <- cbind(subject, activity, measures)
 }
+
+#####
+#####   Main Part of Script
+#####
+
+# Use the doBy library to split-apply-combine
+library(doBy)
+
+# Set the directory
+setwd("~/Documents/MOOCs/Data Science Specialization/Course3_Cleaning-Data/Project")
+
+# Create the tidy train and test data frames
+train <- prepareData("train")
+test <- prepareData("test")
+
+# Merge the train and test data frames into a single tidy data set
+merged <- rbind(train, test)
+
+# Create a subset of the variables that are means and standard deviations
+# According to the code book (features_info.txt), there were means and standard deviations estimated from
+# the various signals. These all contained "mean()" and "std()" in their names. There were additional
+# vectors obtaining by averaging the signal, and although "mean" appears in those variable names,
+# these aren't statistically computed means, so they aren't included in the subset.
+
+# After the variable name cleaning, the variable names that are means and standard deviations either 
+# include ".mean" or ".std" within the name; or "mean" or "std" is at the end of the name.
+index <- grep("\\.mean\\.|\\.mean$|\\.std\\.|\\.std$", names(merged))
+# Subset the data frame using index and include the subject and activity variables
+mergedSubset <- merged[c(1, 2, index)]
+
+# Use summaryBy() from the doBy package to compute the mean and standard deviation of each variable
+# by subject and activity and create a new data set.
+# Specify the splitting using forumla notation: . ~ subject+activity  This means group all variables
+# (that's ".") first by subject and then activity.
+# FUN is the function to apply and it's a vector of functions applied to each variable
+tidyData <- summaryBy(. ~ subject+activity, data=mergedSubset, FUN=function(x) c(mean=mean(x), std=sd(x)))
+
+# Write the tidy data set
+write.table(tidyData, "tidyData.txt")
