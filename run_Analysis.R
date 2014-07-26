@@ -19,26 +19,28 @@ makeFilename <- function (dataSet, ftype) {
 
 cleanData <- function (dataSet) {
 
+  ##
+  ## Read in the components of the data set (spread across three files)
+  ##
   # Read in the subject variable
-  subject <- as.integer(readLines(makeFilename(dataSet, "subject")))
-  
+  subject <- as.integer(readLines(makeFilename(dataSet, "subject")))  
   # Read in the activity variable
-  activity <- as.integer(readLines(makeFilename(dataSet, "activity")))
-  
+  activity <- as.integer(readLines(makeFilename(dataSet, "activity"))) 
   # Read in the measures
   measures <- read.table(makeFilename(dataSet, "measures"))
   
+  ##
+  ## Provide descriptive activity names from activity_labels.txt
+  ##
   # Read in the activity labels
   activitiesPath <- paste(baseDirectory, "activity_labels.txt", sep="/")
-  activities <- read.table(activitiesPath, col.names=c("id", "label"), stringsAsFactors=FALSE)
+  activities <- read.table(activitiesPath, col.names=c("id", "label"), stringsAsFactors=FALSE)  
+  # Make sure the labels are ordered by ID, not the order in file
+  activities <- activities[order(activities$id),]       
+  # Convert activity to a factor using activities as the levels
+  activity <- as.factor(activity)
+  levels(activity) <- tolower(activities$label)
   
-  # Make sure the labels are ordered by ID, not order in file
-  activities <- activities[order(activities$id),]  
-  mapping <- as.list(tolower(activities$label))
-    
-  # And create a new variable of activty labels by applying the mapping to the activity variable
-  activityLabel <- as.factor(sapply(activity, function(x) { mapping[[x]] }))
-  
-  
-  fullData <- cbind(subject, activity, activityLabel, measures)
+  # Create the full data frame
+  fullData <- cbind(subject, activity, measures)
 }
