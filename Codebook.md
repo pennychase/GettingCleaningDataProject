@@ -2,9 +2,9 @@
 
 #### Introduction
 
-The underlying data for this derived data set comes from the University of California, Irvine "Human Activities Recognition Using Smartphones Dataset v.1" [^1].
+The underlying data for this derived data set comes from the University of California, Irvine "Human Activities Recognition Using Smartphones Dataset v.1" [1]
 
-The data set was created by collecting sensor data from experimental subjects wearing a smartphone with accelerometer and gyroscope: "The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz." [^2]
+The data set was created by collecting sensor data from experimental subjects wearing a smartphone with accelerometer and gyroscope: "The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz." [2]
 
 A 561 element feature vector was created by calculating these variables from the time and frequency (using Fast Fourier Transform) domains using the triaxial acceleration and the triaxial angular velocity signals. All of these values are normalized and bounded within [-1,1]. 
 
@@ -281,6 +281,6 @@ The TidyData dataset extracted the calculated means and standard deviations from
 
 **freq.BodyGyroJerkMag.std.std** -- The standard deviation of freq.BodyGyroJerkMag.std by subject and then by activity, computed by summaryBy(). freq.BodyGyroJerkMag.std is the standard deviation of the body angular velocity (from gyroscope) jerk magnitude in the frequency domain. The values are normalized and bounded within [-1,1].
 
-[^1] Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 
+[1] Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012
 
-[^2] README.txt included with the UCI HAR data set.
+[2] README.txt included with the UCI HAR data set.
