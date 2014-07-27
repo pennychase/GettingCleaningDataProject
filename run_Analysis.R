@@ -141,5 +141,6 @@ mergedSubset <- merged[c(1, 2, index)]
 # FUN is the function to apply and it's a vector of functions applied to each variable
 tidyData <- summaryBy(. ~ subject+activity, data=mergedSubset, FUN=function(x) c(mean=mean(x), std=sd(x)))
 
-# Write the tidy data set
+# Write the tidy data set in read.table and csv formats
 write.table(tidyData, "tidyData.txt")
+write.csv(tidyData, "tidyData.csv")
