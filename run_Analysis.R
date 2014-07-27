@@ -11,7 +11,7 @@
 #####   3. Subsets the mean and standard deviation variables from the merged data frame
 #####   4. Computes the means and standard deviations of all the variables in the subset
 #####      by subject and activity
-#####   5. Writes the data frame in a form that can be read in with read.table()
+#####   5. Writes the data frame to files that can be read into R
 #####
 
 # baseDirectory is the directory where the UCI HAR data is located
@@ -112,7 +112,7 @@ prepareData <- function (dataSet) {
 # Use the doBy library to split-apply-combine
 library(doBy)
 
-# Set the directory
+# Set the working directory
 setwd("~/Documents/MOOCs/Data Science Specialization/Course3_Cleaning-Data/Project")
 
 # Create the tidy train and test data frames
@@ -123,22 +123,24 @@ test <- prepareData("test")
 merged <- rbind(train, test)
 
 # Create a subset of the variables that are means and standard deviations
-# According to the code book (features_info.txt), there were means and standard deviations estimated from
-# the various signals. These all contained "mean()" and "std()" in their names. There were additional
-# vectors obtaining by averaging the signal, and although "mean" appears in those variable names,
-# these aren't statistically computed means, so they aren't included in the subset.
+# According to the code book (features_info.txt), means and standard deviations were estimated for
+# the variables computed from the raw signals. These all contain "mean()" and "std()" in their names. 
+# Additional vectors were obtained by averaging the raw signals, and although "Mean" appears in 
+# those variable names, these estimated with a statistical mean function (and they don't have a 
+# corresponding standard deviation), so they aren't included in the subset.
 
 # After the variable name cleaning, the variable names that are means and standard deviations either 
-# include ".mean" or ".std" within the name; or "mean" or "std" is at the end of the name.
+# include ".mean" or ".std" within the name; or "mean" or "std" is at the end of the name. Use that
+# pattern to create an index to subset the data frame.
 index <- grep("\\.mean\\.|\\.mean$|\\.std\\.|\\.std$", names(merged))
-# Subset the data frame using index and include the subject and activity variables
+# Subset the data frame using index and also include the subject and activity variables
 mergedSubset <- merged[c(1, 2, index)]
 
 # Use summaryBy() from the doBy package to compute the mean and standard deviation of each variable
-# by subject and activity and create a new data set.
+# grouping forst by subject and then activity, and create a new data set.
 # Specify the splitting using forumla notation: . ~ subject+activity  This means group all variables
-# (that's ".") first by subject and then activity.
-# FUN is the function to apply and it's a vector of functions applied to each variable
+# (that's indicated by ".") first by subject and then activity.
+# FUN is the function to apply and it's a vector of functions to apply to each variable
 tidyData <- summaryBy(. ~ subject+activity, data=mergedSubset, FUN=function(x) c(mean=mean(x), std=sd(x)))
 
 # Write the tidy data set in read.table and csv formats
