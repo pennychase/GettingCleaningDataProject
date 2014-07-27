@@ -1,4 +1,4 @@
-# Getting and Cleaning Data Course Project
+## Getting and Cleaning Data Course Project
 
 This README contains three sections:
 
@@ -6,7 +6,7 @@ This README contains three sections:
 2. A description of the working directory, expecially the structure of the raw data directory
 3. A description of the R script that turned the raw data into the tidy data set specified by the project
 
-## Description of this repository
+### Description of this repository
 
 This repository contains the following files:
 
@@ -16,9 +16,9 @@ This repository contains the following files:
 - tidyData.csv -- the tidy data set in .csv format that can be read into R using read.csv("tidyData.csv")
 - Codebook.md -- the codebook for the tidy data set
 
-## Description of working directory
+### Description of working directory
 
-This repository contains only the files that the project required to be pushed to Github. The working directory (i.e., my local repository) in addition contains the UCI "Human Activities Recognition Using Smartphones Dataset v.1" in the directory "UCI HAR Dataset".
+This repository contains only the files that the project required to be pushed to Github. The working directory (i.e., my local repository) in addition contains the UCI "Human Activities Recognition Using Smartphones Dataset v.1" in the directory "UCI HAR Dataset".[[1]](#1)
 
 The UCI HAR Dataset directory contains the following:
 
@@ -29,7 +29,7 @@ The UCI HAR Dataset directory contains the following:
 - test -- the test set (30% of the data)
 - train -- the training set (70% of the data)
 
-test and train are similarly structured directories containing both the actual accelerometer and gyroscope signal data (in the Inertial Signals directory) and measurements on that data. The latter data set is the raw data for the project.
+test and train are similarly structured directories containing both the actual accelerometer and gyroscope signal data (in the Inertial Signals directory) and computed variables from the signal data. The latter data set is the raw data for the project.
 
 The test data contains 2947 rows and the training data contains 7352 rows. Each row consists of a 561-feature vector with time and frequency variables for each subject engaging in a specified activity. Each data set is spread across three files:
 
@@ -37,7 +37,7 @@ The test data contains 2947 rows and the training data contains 7352 rows. Each 
 - y_dataset.txt -- the activity ID for each row of the data set (train or test)
 - X_dataset.txt -- the 561-feature vector of time and frequency variables for each row of the data set (train or test)
 
-## Description of run_Analysis.R
+### Description of run_Analysis.R
 
 run_Analysis.R does the following:
 
@@ -45,4 +45,8 @@ run_Analysis.R does the following:
 2. merges the test and train data frames into a single data frame
 3. Creates a data frame with a subset of the variables, namely only those that compute the mean and standard deviation of the measurements. The features_info.txt file describes how various signals were computed, and then variables were estimated from those signals, including the mean and standard deviation. Those were the means and standard deviation selected for the subset. Other variables averaged the signals through a window sample, but those were not included in the subset: they have "Mean" in their names, but aren't estimated using a statistical mean function, and they don't have a corresponding standard deviation.
 4. Uses the summaryBy() function from the doBy package to compute the mean and standard deviation of each variable by subject and activity to create the tidy data frame.
-5. Writes the tidy data frame to two files, tidyData.txt (which can be read into R with read.table("tidyData.txt")) and tidyData.csv(which can be read into R with read.csv("tidyData.csv")) .
+5. Writes the tidy data frame to two files, tidyData.txt (which can be read into R with read.table("tidyData.txt")) and tidyData.csv(which can be read into R with read.csv("tidyData.csv")).
+
+### Notes
+
+<a name="1"></a> [1] Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012. This data set is available at the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones).
