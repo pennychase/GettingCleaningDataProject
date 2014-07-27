@@ -14,6 +14,9 @@
 #####   5. Writes the data frame to files that can be read into R
 #####
 
+
+# Set the working directory
+setwd("~/Documents/MOOCs/Data Science Specialization/Course3_Cleaning-Data/Project")
 # baseDirectory is the directory where the UCI HAR data is located
 baseDirectory <- "./UCI HAR Dataset"
 
@@ -111,9 +114,6 @@ prepareData <- function (dataSet) {
 
 # Use the doBy library to split-apply-combine
 library(doBy)
-
-# Set the working directory
-setwd("~/Documents/MOOCs/Data Science Specialization/Course3_Cleaning-Data/Project")
 
 # Create the tidy train and test data frames
 train <- prepareData("train")
