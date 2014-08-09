@@ -41,7 +41,7 @@ makeFilename <- function (dataSet, ftype) {
 ## 
 cleanNames <- function(varnames) {
   
-  # splitandjoin is a healp function to use in an sapply()
+  # splitandjoin is a helper function to use in an sapply()
   # It splits a variable name into the parts separated by "-",
   # removes the parentheses in the second part (which is the summary function call),
   # and rejoins the parts separated by "."
@@ -146,3 +146,20 @@ tidyData <- summaryBy(. ~ subject+activity, data=mergedSubset, FUN=function(x) c
 # Write the tidy data set in read.table and csv formats
 write.table(tidyData, "tidyData.txt")
 write.csv(tidyData, "tidyData.csv")
+
+
+####
+#### Post Submission
+####
+
+## I misread the instructions and didn't realize I only needed to compute the means of the variables
+## Given that, I could have used melt and dcast after creating the merged subset
+library(reshape2)
+
+melted <- melt(mergedSubset, id=c("subject", "activity"))
+avgs <- dcast(melted, subject+activity ~ variable, fun.aggregate=mean)
+
+write.table(avgs, "tidyData2.txt")
+write.csv(avgs, "tidyData2.csv")
+
+
