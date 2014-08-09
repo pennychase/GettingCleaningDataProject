@@ -10,6 +10,16 @@ A 561 element feature vector was created by calculating these variables from the
 
 The TidyData dataset extracted the calculated means and standard deviations from the feature vector and then computed the mean and standard deviation of each of the extarcted variables, grouped first by subject and then by activity.
 
+### Transformations
+
+The variables from the original data set were renamed for readability and to remove characters that are problematic in R:
+
+- All variables from the original data had a leading "t" or "f" representing the time and frequency domains. These letters were replaced with "time" and "freq" to make them more descriptive.
+- The variables from the original data set derived from accelerometer data had an "Acc" in the name and this was replaced with "Accel" for readability.
+- The hyphens separating parts of the variable names in the original data (what was being computed, the function, and the axis) were replaced by periods, which is a commonly found separator in R variable names.
+- Parentheses in the original variable names were removed because they can be problematic in R variable names.
+- Some variables had "BodyBody" within the name: since this was probably an error by the program that generated the names, the dupicate was removed.
+
 
 ### Variables
 
